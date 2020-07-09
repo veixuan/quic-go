@@ -72,6 +72,8 @@ const (
 type Tracer interface {
 	TracerForServer(odcid ConnectionID) ConnectionTracer
 	TracerForClient(odcid ConnectionID) ConnectionTracer
+
+	DroppedPacket(PacketType, ByteCount, PacketDropReason)
 }
 
 // A ConnectionTracer records events.

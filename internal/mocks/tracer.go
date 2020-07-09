@@ -35,6 +35,18 @@ func (m *MockTracer) EXPECT() *MockTracerMockRecorder {
 	return m.recorder
 }
 
+// DroppedPacket mocks base method
+func (m *MockTracer) DroppedPacket(arg0 protocol.PacketType, arg1 protocol.ByteCount, arg2 logging.PacketDropReason) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DroppedPacket", arg0, arg1, arg2)
+}
+
+// DroppedPacket indicates an expected call of DroppedPacket
+func (mr *MockTracerMockRecorder) DroppedPacket(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DroppedPacket", reflect.TypeOf((*MockTracer)(nil).DroppedPacket), arg0, arg1, arg2)
+}
+
 // TracerForClient mocks base method
 func (m *MockTracer) TracerForClient(arg0 protocol.ConnectionID) logging.ConnectionTracer {
 	m.ctrl.T.Helper()

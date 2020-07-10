@@ -160,7 +160,7 @@ func (mr *MockConnectionTracerMockRecorder) ReceivedRetry(arg0 interface{}) *gom
 }
 
 // ReceivedStatelessReset mocks base method
-func (m *MockConnectionTracer) ReceivedStatelessReset(arg0 [16]byte) {
+func (m *MockConnectionTracer) ReceivedStatelessReset(arg0 protocol.StatelessResetToken) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "ReceivedStatelessReset", arg0)
 }

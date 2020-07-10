@@ -266,7 +266,7 @@ func (t *connectionTracer) ReceivedVersionNegotiationPacket(hdr *wire.Header) {
 	t.mutex.Unlock()
 }
 
-func (t *connectionTracer) ReceivedStatelessReset(token [16]byte) {
+func (t *connectionTracer) ReceivedStatelessReset(token protocol.StatelessResetToken) {
 	t.mutex.Lock()
 	t.recordEvent(time.Now(), &eventStatelessResetReceived{
 		Token: token,

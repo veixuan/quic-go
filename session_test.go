@@ -98,7 +98,7 @@ var _ = Describe("Session", func() {
 			clientDestConnID,
 			destConnID,
 			srcConnID,
-			[16]byte{},
+			protocol.StatelessResetToken{},
 			populateServerConfig(&Config{}),
 			nil, // tls.Config
 			tokenGenerator,
@@ -561,7 +561,7 @@ var _ = Describe("Session", func() {
 		})
 
 		It("closes due to a stateless reset", func() {
-			token := [16]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+			token := protocol.StatelessResetToken{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
 			runSession()
 			gomock.InOrder(
 				tracer.EXPECT().ReceivedStatelessReset(token),
@@ -2328,7 +2328,7 @@ var _ = Describe("Client Session", func() {
 					IPv4:                net.IPv4(127, 0, 0, 1),
 					IPv6:                net.IP{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 					ConnectionID:        protocol.ConnectionID{1, 2, 3, 4},
-					StatelessResetToken: [16]byte{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+					StatelessResetToken: protocol.StatelessResetToken{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
 				},
 			}
 			packer.EXPECT().HandleTransportParameters(gomock.Any())
@@ -2338,10 +2338,10 @@ var _ = Describe("Client Session", func() {
 			// make sure the connection ID is not retired
 			cf, _ := sess.framer.AppendControlFrames(nil, protocol.MaxByteCount)
 			Expect(cf).To(BeEmpty())
-			sessionRunner.EXPECT().AddResetToken([16]byte{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, sess)
+			sessionRunner.EXPECT().AddResetToken(protocol.StatelessResetToken{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, sess)
 			Expect(sess.connIDManager.Get()).To(Equal(protocol.ConnectionID{1, 2, 3, 4}))
 			// shut down
-			sessionRunner.EXPECT().RemoveResetToken([16]byte{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1})
+			sessionRunner.EXPECT().RemoveResetToken(protocol.StatelessResetToken{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1})
 			expectClose()
 		})
 
@@ -2363,7 +2363,7 @@ var _ = Describe("Client Session", func() {
 			params := &wire.TransportParameters{
 				OriginalDestinationConnectionID: destConnID,
 				InitialSourceConnectionID:       protocol.ConnectionID{0xde, 0xca, 0xfb, 0xad},
-				StatelessResetToken:             &[16]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				StatelessResetToken:             &protocol.StatelessResetToken{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 			}
 			expectClose()
 			tracer.EXPECT().ReceivedTransportParameters(params)
@@ -2376,7 +2376,7 @@ var _ = Describe("Client Session", func() {
 			params := &wire.TransportParameters{
 				OriginalDestinationConnectionID: destConnID,
 				InitialSourceConnectionID:       destConnID,
-				StatelessResetToken:             &[16]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				StatelessResetToken:             &protocol.StatelessResetToken{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 			}
 			expectClose()
 			tracer.EXPECT().ReceivedTransportParameters(params)
@@ -2390,7 +2390,7 @@ var _ = Describe("Client Session", func() {
 				OriginalDestinationConnectionID: destConnID,
 				InitialSourceConnectionID:       destConnID,
 				RetrySourceConnectionID:         &protocol.ConnectionID{0xde, 0xad, 0xc0, 0xde},
-				StatelessResetToken:             &[16]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				StatelessResetToken:             &protocol.StatelessResetToken{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 			}
 			expectClose()
 			tracer.EXPECT().ReceivedTransportParameters(params)
@@ -2403,7 +2403,7 @@ var _ = Describe("Client Session", func() {
 				OriginalDestinationConnectionID: destConnID,
 				InitialSourceConnectionID:       destConnID,
 				RetrySourceConnectionID:         &protocol.ConnectionID{0xde, 0xad, 0xc0, 0xde},
-				StatelessResetToken:             &[16]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				StatelessResetToken:             &protocol.StatelessResetToken{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 			}
 			expectClose()
 			tracer.EXPECT().ReceivedTransportParameters(params)
@@ -2416,7 +2416,7 @@ var _ = Describe("Client Session", func() {
 			params := &wire.TransportParameters{
 				OriginalDestinationConnectionID: protocol.ConnectionID{0xde, 0xca, 0xfb, 0xad},
 				InitialSourceConnectionID:       sess.handshakeDestConnID,
-				StatelessResetToken:             &[16]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				StatelessResetToken:             &protocol.StatelessResetToken{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 			}
 			expectClose()
 			tracer.EXPECT().ReceivedTransportParameters(params)

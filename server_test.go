@@ -308,13 +308,13 @@ var _ = Describe("Server", func() {
 				}
 				p := getPacket(hdr, make([]byte, protocol.MinInitialPacketSize))
 				run := make(chan struct{})
-				var token [16]byte
+				var token protocol.StatelessResetToken
 				rand.Read(token[:])
 
 				var newConnID protocol.ConnectionID
 				phm.EXPECT().AddWithConnID(protocol.ConnectionID{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, gomock.Any(), gomock.Any()).DoAndReturn(func(_, c protocol.ConnectionID, fn func() packetHandler) bool {
 					newConnID = c
-					phm.EXPECT().GetStatelessResetToken(gomock.Any()).DoAndReturn(func(c protocol.ConnectionID) [16]byte {
+					phm.EXPECT().GetStatelessResetToken(gomock.Any()).DoAndReturn(func(c protocol.ConnectionID) protocol.StatelessResetToken {
 						newConnID = c
 						return token
 					})
@@ -330,7 +330,7 @@ var _ = Describe("Server", func() {
 					clientDestConnID protocol.ConnectionID,
 					destConnID protocol.ConnectionID,
 					srcConnID protocol.ConnectionID,
-					tokenP [16]byte,
+					tokenP protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -480,13 +480,13 @@ var _ = Describe("Server", func() {
 				}
 				p := getPacket(hdr, make([]byte, protocol.MinInitialPacketSize))
 				run := make(chan struct{})
-				var token [16]byte
+				var token protocol.StatelessResetToken
 				rand.Read(token[:])
 
 				var newConnID protocol.ConnectionID
 				phm.EXPECT().AddWithConnID(protocol.ConnectionID{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, gomock.Any(), gomock.Any()).DoAndReturn(func(_, c protocol.ConnectionID, fn func() packetHandler) bool {
 					newConnID = c
-					phm.EXPECT().GetStatelessResetToken(gomock.Any()).DoAndReturn(func(c protocol.ConnectionID) [16]byte {
+					phm.EXPECT().GetStatelessResetToken(gomock.Any()).DoAndReturn(func(c protocol.ConnectionID) protocol.StatelessResetToken {
 						newConnID = c
 						return token
 					})
@@ -503,7 +503,7 @@ var _ = Describe("Server", func() {
 					clientDestConnID protocol.ConnectionID,
 					destConnID protocol.ConnectionID,
 					srcConnID protocol.ConnectionID,
-					tokenP [16]byte,
+					tokenP protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -570,7 +570,7 @@ var _ = Describe("Server", func() {
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
-					_ [16]byte,
+					_ protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -613,7 +613,7 @@ var _ = Describe("Server", func() {
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
-					_ [16]byte,
+					_ protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -664,7 +664,7 @@ var _ = Describe("Server", func() {
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
-					_ [16]byte,
+					_ protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -694,7 +694,7 @@ var _ = Describe("Server", func() {
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
-					_ [16]byte,
+					_ protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -759,7 +759,7 @@ var _ = Describe("Server", func() {
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
-					_ [16]byte,
+					_ protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -867,7 +867,7 @@ var _ = Describe("Server", func() {
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
 					_ protocol.ConnectionID,
-					_ [16]byte,
+					_ protocol.StatelessResetToken,
 					_ *Config,
 					_ *tls.Config,
 					_ *handshake.TokenGenerator,
@@ -934,7 +934,7 @@ var _ = Describe("Server", func() {
 				_ protocol.ConnectionID,
 				_ protocol.ConnectionID,
 				_ protocol.ConnectionID,
-				_ [16]byte,
+				_ protocol.StatelessResetToken,
 				_ *Config,
 				_ *tls.Config,
 				_ *handshake.TokenGenerator,
@@ -972,7 +972,7 @@ var _ = Describe("Server", func() {
 				_ protocol.ConnectionID,
 				_ protocol.ConnectionID,
 				_ protocol.ConnectionID,
-				_ [16]byte,
+				_ protocol.StatelessResetToken,
 				_ *Config,
 				_ *tls.Config,
 				_ *handshake.TokenGenerator,
@@ -1031,7 +1031,7 @@ var _ = Describe("Server", func() {
 				_ protocol.ConnectionID,
 				_ protocol.ConnectionID,
 				_ protocol.ConnectionID,
-				_ [16]byte,
+				_ protocol.StatelessResetToken,
 				_ *Config,
 				_ *tls.Config,
 				_ *handshake.TokenGenerator,

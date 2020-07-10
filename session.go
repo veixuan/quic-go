@@ -1288,7 +1288,7 @@ func (s *session) handleCloseError(closeErr closeError) {
 	} else if s.tracer != nil {
 		var resetErr statelessResetErr
 		if errors.As(closeErr.err, &resetErr) {
-			s.tracer.ReceivedStatelessReset(resetErr.token)
+			s.tracer.ReceivedStatelessReset(&resetErr.token)
 		}
 	}
 
@@ -1399,7 +1399,7 @@ func (s *session) processTransportParametersImpl(params *wire.TransportParameter
 	if params.PreferredAddress != nil {
 		s.logger.Debugf("Server sent preferred_address. Retiring the preferred_address connection ID.")
 		// Retire the connection ID.
-		s.connIDManager.AddFromPreferredAddress(params.PreferredAddress.ConnectionID, &params.PreferredAddress.StatelessResetToken)
+		s.connIDManager.AddFromPreferredAddress(params.PreferredAddress.ConnectionID, params.PreferredAddress.StatelessResetToken)
 	}
 	// On the server side, the early session is ready as soon as we processed
 	// the client's transport parameters.

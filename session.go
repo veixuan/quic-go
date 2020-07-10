@@ -1285,9 +1285,11 @@ func (s *session) CloseWithError(code protocol.ApplicationErrorCode, desc string
 func (s *session) handleCloseError(closeErr closeError) {
 	if closeErr.err == nil {
 		closeErr.err = qerr.NewApplicationError(0, "")
-	}
-	if statelessReset, ok := closeErr.err.(interface{ StatelessResetToken() *[16]byte }); ok && s.tracer != nil {
-		s.tracer.ReceivedStatelessReset(statelessReset.StatelessResetToken())
+	} else if s.tracer != nil {
+		var resetErr statelessResetErr
+		if errors.As(closeErr.err, &resetErr) {
+			s.tracer.ReceivedStatelessReset(resetErr.token)
+		}
 	}
 
 	var quicErr *qerr.QuicError

@@ -1288,7 +1288,7 @@ func (s *session) handleCloseError(closeErr closeError) {
 	} else if s.tracer != nil {
 		var resetErr statelessResetErr
 		if errors.As(closeErr.err, &resetErr) {
-			s.tracer.ReceivedStatelessReset(&resetErr.token)
+			s.tracer.ReceivedStatelessReset(resetErr.token)
 		}
 	}
 

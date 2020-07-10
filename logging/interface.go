@@ -84,7 +84,7 @@ type ConnectionTracer interface {
 	ReceivedVersionNegotiationPacket(*Header)
 	ReceivedRetry(*Header)
 	ReceivedPacket(hdr *ExtendedHeader, packetSize ByteCount, frames []Frame)
-	ReceivedStatelessReset(token *[16]byte)
+	ReceivedStatelessReset(token [16]byte)
 	BufferedPacket(PacketType)
 	DroppedPacket(PacketType, ByteCount, PacketDropReason)
 	UpdatedMetrics(rttStats *RTTStats, cwnd ByteCount, bytesInFLight ByteCount, packetsInFlight int)
